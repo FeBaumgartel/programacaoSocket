@@ -1,3 +1,4 @@
+#include <netinet/in.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -5,8 +6,9 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[]){
-    int socket_desc;
-    struct sockaddr_in server;
+    int socket_desc,new_socket,c;
+    struct sockaddr_in server, client;
+    char *message, client_reply[2000];
     
     socket_desc = socket(AF_INET, SOCK_STREAM, 0); 
     if (socket_desc == -1){
@@ -24,6 +26,35 @@ int main(int argc, char *argv[]){
     }
 
     printf("Bind efetuado\n");
+     
+    listen(socket_desc, 3);
+
+    printf("Aguardando\n");
+
+    c=sizeof(struct sockaddr_in);
+    while( (new_socket = accept(socket_desc,(struct sockaddr *) &client, (socklen_t*) &c))  ){
+        char *client_ip = inet_ntoa(client.sin_addr);
+        int client_port = ntohs(client.sin_port);
+        printf("Conexão aceita do %s:%d\n", client_ip,client_port);
+
+        message = "Hello Cliente Lindo\n";
+
+        if(recv(new_socket, client_reply, 2000, 0)<0){
+            printf("Falha no recv\n");
+            return 1;
+        }
+
+        printf("Mensagem recebida\n");
+        printf("%s",client_reply);
+        write(new_socket, message, strlen(message));
+    }
+
+
+
+    if(new_socket<0){
+        printf("Erro ao aceitar conexão\n");
+        return 1;
+    }    
 
     return 0;
 }
