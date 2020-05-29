@@ -4,8 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
     int socket_desc;
     struct sockaddr_in server;
     char *message, server_reply[2000];
@@ -13,8 +12,7 @@ int main(int argc, char *argv[])
     /* AF_INET - IPv4, SOCK_STREAM - tcp, 0 - IP */
      socket_desc = socket(AF_INET, SOCK_STREAM, 0); 
     
-    if (socket_desc == -1)
-    {
+    if (socket_desc == -1){
         printf("Não foi possível criou socket\n");
         return 1;
     }
