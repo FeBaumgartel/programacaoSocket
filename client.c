@@ -7,7 +7,7 @@
 int main(int argc, char *argv[]){
     int socket_desc;
     struct sockaddr_in server;
-    char *message, server_reply[2000];
+    char message[2000], server_reply[2000];
 
     /* AF_INET - IPv4, SOCK_STREAM - tcp, 0 - IP */
      socket_desc = socket(AF_INET, SOCK_STREAM, 0); 
@@ -27,24 +27,30 @@ int main(int argc, char *argv[]){
     }
 
     printf("Conectado\n");
+    
 
-    message = "Hello Server Lindo\n";
+    do{
+        printf( "Enter a value :");
+        scanf("%s", message);
 
-    if(send(socket_desc, message, strlen(message), 0)<0){
-        printf("Não criou socket\n");
-        return 1;
-    }
+        printf( "%s", message);
 
-    printf("Dados Enviados\n");
+            if(send(socket_desc, message, strlen(message), 0)<0){
+                printf("Não criou socket\n");
+                return 1;
+            }
 
-    if(recv(socket_desc, server_reply, 2000, 0)<0){
-        printf("Falha no recv\n");
-        return 1;
-    }
+            printf("Dados Enviados\n");
 
-    printf("Resposta recebida\n");
-    printf("%s",server_reply);
+            if(recv(socket_desc, server_reply, 2000, 0)<0){
+                printf("Falha no recv\n");
+                return 1;
+            }
 
+            printf("Resposta recebida\n");
+            printf("%s",server_reply);
+    }while(strcmp(message,"exit")!=0);
+    
     close(socket_desc);
 
     return 0;

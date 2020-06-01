@@ -33,6 +33,7 @@ int main(int argc, char *argv[]){
 
     c=sizeof(struct sockaddr_in);
     while( (new_socket = accept(socket_desc,(struct sockaddr *) &client, (socklen_t*) &c))  ){
+        strcpy(client_reply, "");
         char *client_ip = inet_ntoa(client.sin_addr);
         int client_port = ntohs(client.sin_port);
         printf("Conexão aceita do %s:%d\n", client_ip,client_port);
@@ -46,6 +47,8 @@ int main(int argc, char *argv[]){
 
         printf("Mensagem recebida\n");
         printf("%s",client_reply);
+
+
         write(new_socket, message, strlen(message));
     }
 
