@@ -30,25 +30,34 @@ int main(int argc, char *argv[]){
     
 
     do{
-        printf( "Enter a value :");
-        scanf("%s", message);
+         bzero(message, sizeof(message));
+        
+        /* envia dados */
+        printf("Digite uma mensagem: ");
 
-        printf( "%s", message);
+        int ch, n = 0;
+        /* lê a entrada de dados do usuário via getchar */
+        while ((ch = getchar()) != '\n' && n < 2000) {
+            message[n] = ch;
+            ++n;
+        }
 
-            if(send(socket_desc, message, strlen(message), 0)<0){
-                printf("Não criou socket\n");
-                return 1;
-            }
+        if(send(socket_desc, message, strlen(message), 0)<0){
+            printf("Não criou socket\n");
+            return 1;
+        }
 
-            printf("Dados Enviados\n");
+        printf("Dados Enviados\n");
 
-            if(recv(socket_desc, server_reply, 2000, 0)<0){
-                printf("Falha no recv\n");
-                return 1;
-            }
+        if(recv(socket_desc, server_reply, 2000, 0)<0){
+            printf("Falha no recv\n");
+            return 1;
+        }
 
-            printf("Resposta recebida\n");
-            printf("%s",server_reply);
+        printf("Resposta recebida\n");
+        printf("%s",server_reply);
+        
+        bzero(server_reply, sizeof(server_reply));
     }while(strcmp(message,"exit")!=0);
     
     close(socket_desc);

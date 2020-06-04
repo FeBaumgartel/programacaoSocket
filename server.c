@@ -33,23 +33,28 @@ int main(int argc, char *argv[]){
 
     c=sizeof(struct sockaddr_in);
     while( (new_socket = accept(socket_desc,(struct sockaddr *) &client, (socklen_t*) &c))  ){
-        strcpy(client_reply, "");
+
         char *client_ip = inet_ntoa(client.sin_addr);
         int client_port = ntohs(client.sin_port);
+
         printf("Conexão aceita do %s:%d\n", client_ip,client_port);
 
-        message = "Hello Cliente Lindo\n";
+        do {
+            bzero(client_reply, sizeof(client_reply)); /* limpa a variável char[] */
+            /* recebe dados do cliente */
+            if (recv(new_socket, client_reply, 2000, 0) < 0)
+            {
+                printf("Falha no recv\n");
+                return 1;
+            }
 
-        if(recv(new_socket, client_reply, 2000, 0)<0){
-            printf("Falha no recv\n");
-            return 1;
-        }
+            printf("Mensagem recebida.\n");
+            printf("%s\n", client_reply);
 
-        printf("Mensagem recebida\n");
-        printf("%s",client_reply);
-
-
-        write(new_socket, message, strlen(message));
+            /* resposta ao cliente */
+            message = "Hello Cliente Lindo\n";
+            write(new_socket, message, strlen(message));
+        } while(strcmp(client_reply, "exit") != 0);
     }
 
 
