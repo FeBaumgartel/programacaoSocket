@@ -52,7 +52,17 @@ int main(int argc, char *argv[]){
             printf("%s\n", client_reply);
 
             /* resposta ao cliente */
-            message = "Hello Cliente Lindo\n";
+            bzero(message, sizeof(message));
+        
+            /* envia dados */
+            printf("Digite uma mensagem: ");
+
+            int ch, n = 0;
+            /* lê a entrada de dados do usuário via getchar */
+            while ((ch = getchar()) != '\n' && n < 2000) {
+                message[n] = ch;
+                ++n;
+            }
             write(new_socket, message, strlen(message));
         } while(strcmp(client_reply, "exit") != 0);
     }
