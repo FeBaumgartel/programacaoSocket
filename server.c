@@ -8,7 +8,7 @@
 int main(int argc, char *argv[]){
     int socket_desc,new_socket,c;
     struct sockaddr_in server, client;
-    char *message, client_reply[2000];
+    char message[2000], client_reply[2000];
     
     socket_desc = socket(AF_INET, SOCK_STREAM, 0); 
     if (socket_desc == -1){
